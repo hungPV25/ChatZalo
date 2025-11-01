@@ -1,101 +1,99 @@
 import React from "react";
-import { FaChevronLeft, FaPhoneAlt, FaVideo, FaEllipsisV, FaRegSmile } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaPhoneAlt,
+  FaVideo,
+  FaEllipsisV,
+  FaRegSmile,
+} from "react-icons/fa";
 import { BsPlusCircle } from "react-icons/bs";
 import { IoSend } from "react-icons/io5";
-import AvatarPlaceholder from './AvatarPlaceholder'; 
-import "./MobileChatWindow.css"; 
+import "./MobileChatWindow.css";
 
-const MobileBubble = ({ type, content, position, time, avatarId, participantInfo, isFirstInGroup }) => { 
-  if (type === 'system') {
+const MobileBubble = ({ msg, isFirstInGroup, showName }) => {
+  const { type, content, time, sender } = msg;
+
+  if (type === "system") {
     return <div className="mobile-system-message">{content}</div>;
   }
-  
+
+  const { position, avatarId, name } = sender;
   const isMine = position === "right";
-  const participantData = participantInfo || {}; 
-  const senderKey = isMine ? 'personB' : 'personA';
-  const safeAvatarId = participantData[senderKey] ? participantData[senderKey].avatarId : avatarId;
+  const showAvatar = isFirstInGroup;
 
   return (
-    <div className={`mobile-message-row ${position} ${isFirstInGroup ? 'group-start' : ''}`}> {/* Thêm class group-start */}
-      {!isMine && isFirstInGroup && (
-        <AvatarPlaceholder 
-            size={30} 
-            className="mobile-message-avatar" 
-            id={safeAvatarId} 
-        /> 
-      )}
-      {!isMine && !isFirstInGroup && (
-          <div style={{ width: 30, height: 30, marginRight: 5 }} className="mobile-message-avatar-spacer" />
-      )}
-
-      <div className="mobile-bubble-content">
-        <div className={`mobile-message-bubble ${position} ${isFirstInGroup ? 'first-in-group' : 'in-group'}`}>
+    <div
+      className={`mobile-message-row ${position} ${
+        showAvatar ? "" : "no-avatar"
+      }`}
+    >
+      <div className="mobile-message-content">
+        <div className={`mobile-message-bubble ${position}`}>
           <span className="mobile-message-text">{content}</span>
         </div>
         <span className={`mobile-message-time ${position}`}>{time}</span>
       </div>
+      {isMine && <div className="mobile-message-right-spacer"></div>}
     </div>
   );
 };
 
-const MobileChatWindow = ({ messageData, chatPartnerName, participantsConfig }) => {
-  const chatPartnerStatus = "";
-  const chatPartnerAvatarId = participantsConfig.personA.avatarId;
-  const processedMessages = messageData.map((msg, index) => {
-    const previousMsg = messageData[index - 1];
-    const isSameSender = previousMsg && previousMsg.position === msg.position && previousMsg.type === 'text';
-    const isFirstInGroup = !isSameSender || !previousMsg;
-    
+const MobileChatWindow = ({
+  messageData,
+  chatPartnerName,
+}) => {
+  const chatPartnerStatus = "Đang hoạt động";
+  const processedMessages = messageData.map((msg, index, array) => {
+    const prevMsg = array[index - 1];
+    const currentSenderId = msg.sender.id;
+    const prevSenderId = prevMsg ? prevMsg.sender.id : null;
+    const isSameSender = prevMsg && prevSenderId === currentSenderId;
+    const isFirstInGroup = !isSameSender;
+    const showName = isFirstInGroup && msg.sender.position === "left";
     return {
-        ...msg,
-        isFirstInGroup,
-        participantInfo: participantsConfig 
+      msg: msg, 
+      isFirstInGroup,
+      showName,
     };
   });
-  
+
   return (
     <div className="mobile-chat-window">
-      
       <div className="mobile-header">
         <FaChevronLeft size={20} className="mobile-header-icon back-icon" />
         <div className="mobile-header-info">
-          <AvatarPlaceholder 
-              size={38} 
-              className="mobile-header-avatar" 
-              id={chatPartnerAvatarId} 
-          />
           <div className="mobile-header-text">
             <span className="mobile-header-name">{chatPartnerName}</span>
             <span className="mobile-header-status">{chatPartnerStatus}</span>
           </div>
         </div>
-        
         <div className="mobile-header-actions">
           <FaPhoneAlt size={20} className="mobile-header-icon" />
           <FaVideo size={20} className="mobile-header-icon" />
           <FaEllipsisV size={20} className="mobile-header-icon" />
         </div>
       </div>
-      
       <div className="mobile-message-list">
-        {processedMessages.map((msg, index) => (
-          <MobileBubble key={index} {...msg} />
+        {processedMessages.map((item, index) => (
+          <MobileBubble
+            key={index}
+            msg={item.msg}
+            isFirstInGroup={item.isFirstInGroup}
+            showName={item.showName}
+          />
         ))}
       </div>
-      
       <div className="mobile-input-footer">
-        <BsPlusCircle size={24} className="input-footer-icon" /> 
-        
+        <BsPlusCircle size={24} className="input-footer-icon" />
         <div className="mobile-input-container">
-            <input 
-              type="text" 
-              placeholder="Tin nhắn" 
-              className="mobile-text-input"
-            />
-            <FaRegSmile size={24} className="input-icon-inside" /> 
+          <input
+            type="text"
+            placeholder="Tin nhắn"
+            className="mobile-text-input"
+          />
+          <FaRegSmile size={24} className="input-icon-inside" />
         </div>
-        
-        <IoSend size={24} className="input-footer-send-icon blue-icon" /> 
+        <IoSend size={24} className="input-footer-send-icon blue-icon" />
       </div>
     </div>
   );

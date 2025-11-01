@@ -3,147 +3,124 @@ import MobileChatWindow from './MobileChatWindow';
 import './ChatConfigurator.css'; 
 import { FaTrashAlt } from 'react-icons/fa'; 
 
-const createIdFromName = (name) => {
-    if (!name || name.trim() === '') return 1;
-    const hash = name.trim().toUpperCase().charCodeAt(0);
-    return (hash % 10) + 1; 
-};
-
 const ChatConfigurator = () => {
     const [messages, setMessages] = useState([]);
-
-    const initialPersonAName = '';
-    const initialPersonBName = '';
-
-    const [participantsConfig, setParticipantsConfig] = useState({
-        personA: { 
-            name: initialPersonAName, 
-            avatarId: createIdFromName(initialPersonAName), 
-            position: 'left' 
-        },
-        personB: { 
-            name: initialPersonBName, 
-            avatarId: createIdFromName(initialPersonBName), 
-            position: 'right' 
-        },
-    });
-
+    const [chatHeaderName, setChatHeaderName] = useState('Cuộc trò chuyện');
     const [newMessage, setNewMessage] = useState({
         content: '',
-        sendingParticipant: 'personA', 
+        senderName: 'Khách hàng',
+        position: 'left',         
     });
-
-    const handleParticipantChange = (e, personKey) => {
-        const { name, value } = e.target;
-        const newAvatarId = createIdFromName(value); 
-        setParticipantsConfig(prevConfig => ({
-            ...prevConfig,
-            [personKey]: {
-                ...prevConfig[personKey],
-                [name]: value,      
-                avatarId: newAvatarId 
-            },
-        }));
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
         if (!newMessage.content.trim()) return; 
 
-        const senderKey = newMessage.sendingParticipant;
-        const sender = participantsConfig[senderKey];
+        const lastMessage = messages[messages.length - 1];
+        const currentPosition = newMessage.position;
+        const currentSenderNameInput = newMessage.senderName.trim();
 
+        let finalSenderName;
+        
+        if (!lastMessage || lastMessage.sender.position !== currentPosition) {
+            finalSenderName = currentSenderNameInput || (currentPosition === 'left' ? 'Người Trái' : 'Tôi');
+        } else {
+            finalSenderName = lastMessage.sender.name;
+        }
+
+        if (currentPosition === 'left' && finalSenderName.trim()) {
+             setChatHeaderName(finalSenderName);
+        }
+
+        const position = newMessage.position;
+
+        const senderId = (position === 'left' ? 1 : 2);
+        
         const now = new Date();
         const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
         const messageToAdd = {
             type: 'text',
             content: newMessage.content.trim(),
-            position: sender.position, 
             time: timeString,
-            avatarId: sender.avatarId 
+            
+            sender: {
+                id: senderId,
+                name: finalSenderName,
+                position: position, 
+            }
         };
 
         setMessages(prevMessages => [...prevMessages, messageToAdd]);
-        setNewMessage({ ...newMessage, content: '' });
+        setNewMessage(prevMsg => ({ ...prevMsg, content: '' }));
     };
 
     const handleClearMessages = () => {
-        if (window.confirm("Bạn có chắc chắn muốn xóa hết tin nhắn và bắt đầu lại?")) {
+        if (window.confirm("Bạn có chắc chắn muốn xóa hết tin nhắn?")) {
              setMessages([]);
         }
     };
     
     const hasMessages = messages.length > 0;
+    const defaultChatPartnerName = messages.length > 0 && messages[messages.length - 1].sender.position === 'left'
+        ? messages[messages.length - 1].sender.name
+        : 'Cuộc trò chuyện';
+
+    const dummyParticipantsConfig = {
+        personA: { name: 'Người Trái' },
+        personB: { name: 'Người Phải' }
+    };
 
     return (
         <div className="chat-config-container">
             
             <div className="config-panel">
-                <h3>Cấu hình Cuộc Trò Chuyện</h3>
-
-                <div className="participants-config-wrapper">
-
-                    <div className="participant-box left-person">
-                        <h4>Người A (Header & Left)</h4>
-                        <input 
-                            name="name"
-                            placeholder="Tên người nhận (ví dụ: Huy Ngu)"
-                            value={participantsConfig.personA.name}
-                            onChange={(e) => handleParticipantChange(e, 'personA')}
-                        />
-                    </div>
-
-                    <div className="participant-box right-person">
-                        <h4>Người B (Của tôi & Right)</h4>
-                        <input 
-                            name="name"
-                            placeholder="Tên của bạn (ví dụ: Bạn)"
-                            value={participantsConfig.personB.name}
-                            onChange={(e) => handleParticipantChange(e, 'personB')}
-                        />
-                    </div>
-
-                </div>
-                
-                <hr className="config-divider" />
-
+                <h3>Cấu hình Tin nhắn Nhanh 🚀</h3>
                 <h3>Thêm Tin nhắn</h3>
-                <form onSubmit={handleSubmit} className="message-form">
-
+                <form onSubmit={handleSubmit} className="message-form simple-form">
                     <div className="input-group">
-                        <label>Người gửi:</label>
+                        <label>Tên người gửi:</label>
+                        <input 
+                            type="text"
+                            placeholder="Nhập tên người gửi"
+                            value={newMessage.senderName}
+                            onChange={(e) => setNewMessage({...newMessage, senderName: e.target.value})}
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>Vị trí tin nhắn:</label>
                         <select 
-                            name="sendingParticipant" 
-                            value={newMessage.sendingParticipant} 
-                            onChange={(e) => setNewMessage({...newMessage, sendingParticipant: e.target.value})}
+                            name="position" 
+                            value={newMessage.position} 
+                            onChange={(e) => setNewMessage({...newMessage, position: e.target.value})}
                         >
-                            <option value="personA">{participantsConfig.personA.name} (Left)</option>
-                            <option value="personB">{participantsConfig.personB.name} (Right)</option>
+                            <option value="left">Bên Trái</option>
+                            <option value="right">Bên Phải</option>
                         </select>
                     </div>
-
-                    <textarea
-                        name="content"
-                        placeholder="Nội dung tin nhắn..."
-                        value={newMessage.content}
-                        onChange={(e) => setNewMessage({...newMessage, content: e.target.value})}
-                        rows="4"
-                        required
-                    />
-
-                    <button type="submit" className="add-message-btn">
-                        Thêm Tin nhắn
-                    </button>
+                    <div className="textarea-container">
+                        <textarea
+                            name="content"
+                            placeholder="Nội dung tin nhắn..."
+                            value={newMessage.content}
+                            onChange={(e) => setNewMessage({...newMessage, content: e.target.value})}
+                            rows="4"
+                            required
+                        />
+                        <button type="submit" className="add-message-btn">
+                            Thêm Tin nhắn
+                        </button>
+                    </div>
                 </form>
                 
+                <hr className="config-divider" />
                 <button 
                     onClick={handleClearMessages} 
                     className="clear-message-btn" 
                     disabled={!hasMessages}
                 >
-                    <FaTrashAlt /> Xóa Hết Tin Nhắn
+                    <FaTrashAlt style={{ marginRight: '8px' }} /> Xóa Hết Tin Nhắn
                 </button>
 
                 {!hasMessages && (
@@ -152,16 +129,12 @@ const ChatConfigurator = () => {
                     </p>
                 )}
             </div>
-
-            {hasMessages && (
                 <MobileChatWindow 
                     messageData={messages} 
-                    chatPartnerName={participantsConfig.personA.name}
-                    participantsConfig={participantsConfig} 
+                    chatPartnerName={defaultChatPartnerName} 
+                    groupParticipants={dummyParticipantsConfig} 
                 />
-            )}
-            
-        </div>
+        </div>  
     );
 };
 

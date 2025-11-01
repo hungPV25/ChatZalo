@@ -1,6 +1,6 @@
 .mobile-chat-window {
     width: 380px; 
-    height: 700px;
+    height: 650px;
     display: flex;
     flex-direction: column;
     background-color: white; 
