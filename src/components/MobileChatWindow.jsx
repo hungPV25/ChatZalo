@@ -39,8 +39,8 @@ const MobileBubble = ({ type, content, position, time, avatarId, participantInfo
 };
 
 const MobileChatWindow = ({ messageData, chatPartnerName, participantsConfig }) => {
-  const chatPartnerStatus = "Truy cập 39 phút trước";
-  
+  const chatPartnerStatus = "";
+  const chatPartnerAvatarId = participantsConfig.personA.avatarId;
   const processedMessages = messageData.map((msg, index) => {
     const previousMsg = messageData[index - 1];
     const isSameSender = previousMsg && previousMsg.position === msg.position && previousMsg.type === 'text';
@@ -59,6 +59,11 @@ const MobileChatWindow = ({ messageData, chatPartnerName, participantsConfig }) 
       <div className="mobile-header">
         <FaChevronLeft size={20} className="mobile-header-icon back-icon" />
         <div className="mobile-header-info">
+          <AvatarPlaceholder 
+              size={38} 
+              className="mobile-header-avatar" 
+              id={chatPartnerAvatarId} 
+          />
           <div className="mobile-header-text">
             <span className="mobile-header-name">{chatPartnerName}</span>
             <span className="mobile-header-status">{chatPartnerStatus}</span>

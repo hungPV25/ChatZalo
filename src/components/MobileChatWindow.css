@@ -38,6 +38,7 @@
 .mobile-header-text {
     display: flex;
     flex-direction: column;
+    margin-left: 10px;
 }
 
 .mobile-header-sub-icon { 
