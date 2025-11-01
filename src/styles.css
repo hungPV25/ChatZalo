@@ -1,0 +1,53 @@
+
+/* Mobile-like Zalo chat CSS */
+*{box-sizing:border-box}
+html,body,#root{height:100%;margin:0;font-family: 'Segoe UI', Roboto, Arial, sans-serif;background:#e9edf0}
+.mobile-shell{display:flex;flex-direction:column;height:100vh;max-width:420px;margin:0 auto;border-left:1px solid rgba(0,0,0,0.04);border-right:1px solid rgba(0,0,0,0.04);background:#fff}
+.chat-header{height:64px;background:linear-gradient(90deg,#1791ff,#0ea5ff);color:white;display:flex;align-items:center;justify-content:space-between;padding:8px 12px}
+.header-left{display:flex;align-items:center;gap:10px}
+.back-btn{background:transparent;border:none;color:white;font-size:20px;padding:6px}
+.header-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,0.15)}
+.header-title{display:flex;flex-direction:column}
+.header-title .name{font-weight:600}
+.header-title .sub{font-size:12px;opacity:0.9}
+.header-right .icon{background:transparent;border:none;color:white;font-size:18px;margin-left:8px}
+
+/* messages */
+.chat-messages{flex:1;overflow-y:auto;background:#f0f3f5;padding:18px 12px}
+.messages-inner{max-width:360px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.date-pill{align-self:center;background:#bfc4c9;color:white;padding:6px 12px;border-radius:16px;font-size:12px}
+
+/* message row */
+.msg-row{display:flex;align-items:flex-end;gap:8px;max-width:100%}
+.msg-row.other{justify-content:flex-start}
+.msg-row.me{justify-content:flex-end}
+
+/* avatar small */
+.msg-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+
+/* bubble */
+.bubble{position:relative;padding:10px 14px;border-radius:12px;max-width:80%;box-shadow:0 1px 0 rgba(0,0,0,0.04);}
+.bubble.other{background:white;border:1px solid rgba(0,0,0,0.04);border-bottom-left-radius:6px}
+.bubble.other:after{content:'';position:absolute;left:-8px;bottom:6px;width:0;height:0;border-top:8px solid transparent;border-right:8px solid white}
+.bubble.me{background:#d7f0ff;color:#02263a;border-bottom-right-radius:6px}
+.bubble.me:after{content:'';position:absolute;right:-8px;bottom:6px;width:0;height:0;border-top:8px solid transparent;border-left:8px solid #d7f0ff}
+
+/* special call bubble style */
+.bubble.call{background:#dff3ff;border:1px solid rgba(0,0,0,0.04);color:#04496b;font-weight:600}
+
+/* bubble text and meta */
+.bubble-text{font-size:15px;line-height:1.4}
+.bubble-meta{font-size:12px;color:#97a0a6;margin-top:6px;text-align:right}
+
+/* reaction bubble */
+.reaction{display:flex;gap:6px;margin-left:8px}
+.reaction-item{background:white;border-radius:999px;padding:4px 6px;box-shadow:0 1px 4px rgba(0,0,0,0.06);font-size:13px}
+
+/* input area at bottom */
+.chat-input-area{height:72px;border-top:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;padding:10px;background:white}
+.chat-input{flex:1;height:44px;border-radius:22px;border:1px solid rgba(0,0,0,0.06);padding:10px 14px;font-size:16px;outline:none;background:#f7f7f8}
+.input-icon{background:transparent;border:none;font-size:22px;padding:6px}
+.right-icons .icon{background:linear-gradient(90deg,#ffb03b,#ff812b);border:none;border-radius:8px;color:white;padding:8px;font-size:16px}
+
+/* safe area bottom indicator (like iOS home bar) */
+.safe-area{height:18px;background:transparent}

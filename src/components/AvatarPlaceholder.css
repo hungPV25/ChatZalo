@@ -1,0 +1,8 @@
+.avatar-placeholder {
+    border-radius: 50%; 
+    overflow: hidden;   
+    display: flex;     
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;    
+}
