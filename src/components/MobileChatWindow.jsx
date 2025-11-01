@@ -10,38 +10,50 @@ import { BsPlusCircle } from "react-icons/bs";
 import { IoSend } from "react-icons/io5";
 import "./MobileChatWindow.css";
 
-const MobileBubble = ({ msg, isFirstInGroup, showName }) => {
-  const { type, content, time, sender } = msg;
+const MobileBubble = ({ msg, isFirstInGroup }) => {
+  const { type, content, time, sender, imageSrc } = msg;
 
   if (type === "system") {
     return <div className="mobile-system-message">{content}</div>;
   }
+  console.log(msg);
 
-  const { position, avatarId, name } = sender;
+  const { position } = sender;
   const isMine = position === "right";
   const showAvatar = isFirstInGroup;
-
+  const hasTime = !!time;
+  const showImage = !isMine && !!imageSrc;
   return (
-    <div
-      className={`mobile-message-row ${position} ${
-        showAvatar ? "" : "no-avatar"
-      }`}
-    >
+    <div className={`mobile-message-row ${position}`}>
       <div className="mobile-message-content">
-        <div className={`mobile-message-bubble ${position}`}>
+        {showImage && (
+          <div className="mobile-image-container">
+            <img
+              src={imageSrc}
+              alt="Message attachment"
+              className="mobile-message-image"
+            />
+          </div>
+        )}
+        <div
+          className={`mobile-message-bubble ${position} ${
+            !hasTime ? "no-time" : ""
+          } ${!showImage ? "no-message-image" : ""}`}
+        >
           <span className="mobile-message-text">{content}</span>
+          {hasTime && (
+            <span className={`mobile-message-time-in-bubble ${position}`}>
+              {time}
+            </span>
+          )}
         </div>
-        <span className={`mobile-message-time ${position}`}>{time}</span>
       </div>
       {isMine && <div className="mobile-message-right-spacer"></div>}
     </div>
   );
 };
 
-const MobileChatWindow = ({
-  messageData,
-  chatPartnerName,
-}) => {
+const MobileChatWindow = ({ messageData, chatPartnerName }) => {
   const chatPartnerStatus = "Đang hoạt động";
   const processedMessages = messageData.map((msg, index, array) => {
     const prevMsg = array[index - 1];
@@ -51,7 +63,7 @@ const MobileChatWindow = ({
     const isFirstInGroup = !isSameSender;
     const showName = isFirstInGroup && msg.sender.position === "left";
     return {
-      msg: msg, 
+      msg: msg,
       isFirstInGroup,
       showName,
     };
