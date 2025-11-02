@@ -14,7 +14,7 @@
     display: flex;
     align-items: center;
     padding: 8px 10px;
-    background-color: #0087FF; 
+    background-color: #0076ff; 
     color: white; 
     height: 50px; 
     flex-shrink: 0; 
@@ -262,7 +262,6 @@
     position: relative; 
     height: 38px; 
     margin-right: 8px; 
-    background-color: #f0f0f0; 
     border-radius: 20px;
     padding: 0 10px; 
 }
@@ -297,4 +296,9 @@
 
 .no-message-image {
     margin-left: 40px;
+}
+
+.mobile-message-text img{
+    width: 90px;
+    height: 90px;
 }

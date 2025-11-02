@@ -5,8 +5,10 @@ import {
   FaVideo,
   FaEllipsisV,
   FaRegSmile,
+  FaMicrophoneAlt,
+  FaRegImage,
 } from "react-icons/fa";
-import { BsPlusCircle } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import { IoSend } from "react-icons/io5";
 import "./MobileChatWindow.css";
 
@@ -16,11 +18,9 @@ const MobileBubble = ({ msg, isFirstInGroup }) => {
   if (type === "system") {
     return <div className="mobile-system-message">{content}</div>;
   }
-  console.log(msg);
 
   const { position } = sender;
   const isMine = position === "right";
-  const showAvatar = isFirstInGroup;
   const hasTime = !!time;
   const showImage = !isMine && !!imageSrc;
   return (
@@ -40,7 +40,10 @@ const MobileBubble = ({ msg, isFirstInGroup }) => {
             !hasTime ? "no-time" : ""
           } ${!showImage ? "no-message-image" : ""}`}
         >
-          <span className="mobile-message-text">{content}</span>
+          <span
+            className="mobile-message-text"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
           {hasTime && (
             <span className={`mobile-message-time-in-bubble ${position}`}>
               {time}
@@ -96,16 +99,17 @@ const MobileChatWindow = ({ messageData, chatPartnerName }) => {
         ))}
       </div>
       <div className="mobile-input-footer">
-        <BsPlusCircle size={24} className="input-footer-icon" />
+        <FaRegSmile size={24} className="input-footer-icon" />
         <div className="mobile-input-container">
           <input
             type="text"
             placeholder="Tin nhắn"
             className="mobile-text-input"
           />
-          <FaRegSmile size={24} className="input-icon-inside" />
         </div>
-        <IoSend size={24} className="input-footer-send-icon blue-icon" />
+        <BsThreeDots size={24} className="input-footer-icon" />
+        <FaMicrophoneAlt size={24} className="input-footer-icon" />
+        <FaRegImage size={24} className="input-footer-icon blue-icon" />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MobileChatWindow from "./MobileChatWindow";
 import "./ChatConfigurator.css";
 import { FaTrashAlt } from "react-icons/fa";
+import { AVAILABLE_ICONS } from "../assets/index.jsx";
 
 const readFileAsDataURL = (file) => {
   return new Promise((resolve, reject) => {
@@ -15,6 +16,8 @@ const readFileAsDataURL = (file) => {
 const ChatConfigurator = () => {
   const [messages, setMessages] = useState([]);
   const [chatHeaderName, setChatHeaderName] = useState("Cuộc trò chuyện");
+  const [selectedStickerPreview, setSelectedStickerPreview] = useState(null);
+  const [contentType, setContentType] = useState("text");
   const [newMessage, setNewMessage] = useState({
     content: "",
     senderName: "",
@@ -41,7 +44,18 @@ const ChatConfigurator = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!newMessage.content.trim()) return;
+    if (
+      contentType === "text" &&
+      !newMessage.content.trim() &&
+      !newMessage.imageSrc
+    ) {
+      return;
+    }
+
+    if (contentType === "sticker" && !selectedStickerPreview) {
+      alert("Vui lòng chọn một Sticker.");
+      return;
+    }
 
     const lastMessage = messages[messages.length - 1];
     const currentPosition = newMessage.position;
@@ -64,7 +78,6 @@ const ChatConfigurator = () => {
     const position = newMessage.position;
     const senderId = position === "left" ? 1 : 2;
     const timeString = newMessage.time.trim();
-    const now = new Date();
 
     const messageToAdd = {
       type: "text",
@@ -81,7 +94,7 @@ const ChatConfigurator = () => {
     setMessages((prevMessages) => [...prevMessages, messageToAdd]);
     setNewMessage((prevMsg) => ({ ...prevMsg, content: "" }));
 
-    setNewMessage((prevMsg) => ({
+    setNewMessage(() => ({
       content: "",
       senderName: "",
       position: "left",
@@ -97,6 +110,15 @@ const ChatConfigurator = () => {
   };
 
   const hasMessages = messages.length > 0;
+
+  const handleIconSelect = (iconSrc, iconAlt) => {
+    const iconHtml = `<img src="${iconSrc}" alt="${iconAlt}" class="message-sticker"/>`;
+    setSelectedStickerPreview(iconSrc);
+    setNewMessage((prevMsg) => ({
+      ...prevMsg,
+      content: iconHtml,
+    }));
+  };
 
   return (
     <div className="chat-config-container">
@@ -128,19 +150,6 @@ const ChatConfigurator = () => {
               <option value="right">Bên Phải</option>
             </select>
           </div>
-          <div className="textarea-container">
-            <label>Nội dung tin nhắn:</label>
-            <textarea
-              name="content"
-              placeholder="Nội dung tin nhắn..."
-              value={newMessage.content}
-              onChange={(e) =>
-                setNewMessage({ ...newMessage, content: e.target.value })
-              }
-              rows="4"
-              required
-            />
-          </div>
           <div className="input-group">
             <label>Thời gian (HH:MM):</label>
             <input
@@ -166,6 +175,63 @@ const ChatConfigurator = () => {
                 alt="Preview"
                 className="preview-img"
               />
+            )}
+          </div>
+          <div className="input-group">
+            <label>Loại Nội dung tin nhắn:</label>
+            <select
+              value={contentType}
+              onChange={(e) => {
+                const newType = e.target.value;
+                setContentType(newType);
+                setNewMessage({ ...newMessage, content: "" });
+              }}
+            >
+              <option value="text">Tin nhắn Văn bản</option>
+              <option value="sticker">Sticker/Icon</option>
+            </select>
+          </div>
+          <div className="input-group">
+            {contentType === "text" && (
+              <textarea
+                name="content"
+                placeholder="Nhập nội dung tin nhắn..."
+                value={newMessage.content}
+                onChange={(e) =>
+                  setNewMessage({ ...newMessage, content: e.target.value })
+                }
+                rows="4"
+                required={!newMessage.imageSrc}
+                className="content-textarea"
+              />
+            )}
+
+            {contentType === "sticker" && (
+              <div className="sticker-selector-container">
+                <p>Chọn một Sticker:</p>
+                {selectedStickerPreview && (
+                  <img
+                    src={selectedStickerPreview}
+                    alt="Selected Sticker Preview"
+                    className="selected-sticker-preview-image"
+                  />
+                )}
+                <div className="icon-selection-bar">
+                  {AVAILABLE_ICONS.map((icon, index) => (
+                    <img
+                      key={index}
+                      src={icon.src}
+                      alt={icon.alt}
+                      className={`selectable-image-icon ${
+                        newMessage.content.includes(icon.src)
+                          ? "selected-icon"
+                          : ""
+                      }`}
+                      onClick={() => handleIconSelect(icon.src, icon.alt)}
+                    />
+                  ))}
+                </div>
+              </div>
             )}
           </div>
           <button type="submit" className="add-message-btn">

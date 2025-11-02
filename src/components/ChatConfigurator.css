@@ -164,3 +164,49 @@
   border-radius: 5px;
   border: 1px solid #ddd;
 }
+
+.icon-selection-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    padding: 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+    overflow-x: auto; 
+    white-space: nowrap;
+}
+
+.icon-bar-label {
+    font-weight: bold;
+    color: #555;
+    font-size: 14px;
+    flex-shrink: 0; 
+}
+
+.selectable-image-icon {
+    width: 30px; 
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    flex-shrink: 0; 
+}
+
+.selectable-image-icon:hover {
+    transform: scale(1.2); 
+}
+
+.sticker-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ddd; 
+}
+
+.selected-sticker-preview-image {
+    width: 40px; 
+    height: 40px;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+}
