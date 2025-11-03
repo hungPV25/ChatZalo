@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaChevronLeft,
   FaPhoneAlt,
@@ -7,18 +7,28 @@ import {
   FaRegSmile,
   FaMicrophoneAlt,
   FaRegImage,
+  FaHeart,
+  FaRegHeart,
 } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
-import { IoSend } from "react-icons/io5";
 import "./MobileChatWindow.css";
 
-const MobileBubble = ({ msg, isFirstInGroup }) => {
-  const { type, content, time, sender, imageSrc } = msg;
+const MobileBubble = ({ msg }) => {
+  const { type, content, time, sender, imageSrc, reactionCount } = msg;
+
+  const [isLiked, setIsLiked] = useState(false);
 
   if (type === "system") {
     return <div className="mobile-system-message">{content}</div>;
   }
 
+  const handleLikeClick = (e) => {
+    e.stopPropagation();
+    setIsLiked((prev) => !prev);
+  };
+
+  const showReactionBubble = isLiked || reactionCount > 0;
+  const displayCount = reactionCount + (isLiked ? 1 : 0);
   const { position } = sender;
   const isMine = position === "right";
   const hasTime = !!time;
@@ -49,6 +59,15 @@ const MobileBubble = ({ msg, isFirstInGroup }) => {
               {time}
             </span>
           )}
+          {showReactionBubble && (
+            <div className={`zalo-like-button-count ${isLiked ? "liked" : ""}`}>
+              <FaHeart size={12} className="zalo-heart-icon filled-heart" />
+              <span className="zalo-like-count">{displayCount}</span>
+            </div>
+          )}
+          <div className={`zalo-like-button ${isLiked ? "liked" : ""}`}>
+            <FaHeart size={14} className="zalo-heart-icon filled-heart" />
+          </div>
         </div>
       </div>
       {isMine && <div className="mobile-message-right-spacer"></div>}

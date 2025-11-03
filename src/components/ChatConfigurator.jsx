@@ -24,6 +24,7 @@ const ChatConfigurator = () => {
     position: "left",
     time: "",
     imageSrc: null,
+    reactionCount: 0,
   });
 
   const handleImageChange = async (e) => {
@@ -84,6 +85,7 @@ const ChatConfigurator = () => {
       content: newMessage.content.trim(),
       time: timeString,
       imageSrc: newMessage.imageSrc,
+      reactionCount: newMessage.reactionCount,
       sender: {
         id: senderId,
         name: finalSenderName,
@@ -100,6 +102,7 @@ const ChatConfigurator = () => {
       position: "left",
       time: "",
       imageSrc: null,
+      reactionCount: 0,
     }));
   };
 
@@ -233,6 +236,22 @@ const ChatConfigurator = () => {
                 </div>
               </div>
             )}
+          </div>
+          <div className="input-group">
+            <label>Số lượt tim (Reaction Count):</label>
+            <input
+              type="number"
+              name="reactionCount"
+              placeholder="Số lượng tim (0 nếu không có)"
+              value={newMessage.reactionCount}
+              onChange={(e) =>
+                setNewMessage({
+                  ...newMessage,
+                  reactionCount: parseInt(e.target.value) || 0,
+                })
+              }
+              min="0"
+            />
           </div>
           <button type="submit" className="add-message-btn">
             Thêm Tin nhắn

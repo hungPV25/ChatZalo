@@ -108,8 +108,8 @@
 
 .mobile-message-bubble {
     position: relative; 
-    padding: 8px 12px;
-    border-radius: 18px;
+    padding: 12px 12px;
+    border-radius: 10px;
     max-width: 100%;
     word-wrap: break-word;
     padding-bottom: 20px;
@@ -117,7 +117,7 @@
 
 .no-time {
     position: relative; 
-    padding: 8px 12px;
+    padding: 12px 12px;
     border-radius: 18px;
     max-width: 100%;
     word-wrap: break-word;
@@ -144,11 +144,12 @@
 
 .mobile-message-bubble.left {
     background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
     color: #333;
-    border-top-left-radius: 18px;    
-    border-bottom-left-radius: 18px; 
-    border-top-right-radius: 18px;   
-    border-bottom-right-radius: 18px;
+    border-top-left-radius: 10px;    
+    border-bottom-left-radius: 10px; 
+    border-top-right-radius: 10px;   
+    border-bottom-right-radius: 10px;
 }
 
 
@@ -172,11 +173,12 @@
 
 .mobile-message-bubble.right {
     background-color: #e5efff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
     color: #333; 
-    border-top-left-radius: 18px;
-    border-bottom-left-radius: 18px;
-    border-top-right-radius: 18px;
-    border-bottom-right-radius: 18px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .mobile-message-bubble.right.first-in-group {
@@ -301,4 +303,58 @@
 .mobile-message-text img{
     width: 90px;
     height: 90px;
+}
+
+
+.zalo-like-button {
+    position: absolute;
+    bottom: -15px; 
+    right: 3px;   
+    display: flex;
+    align-items: center;
+    padding: 6px 6px;
+    border-radius: 50%;
+    background-color: white; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
+    z-index: 10; 
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+}
+
+.zalo-like-button-count {
+    position: absolute;
+    bottom: -11px; 
+    right: 40px;   
+    display: flex;
+    align-items: center;
+    padding: 1px 6px;
+    border-radius: 12px;
+    background-color: white; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
+    z-index: 10; 
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+}
+
+.zalo-like-button:active {
+    transform: scale(0.9); 
+}
+
+.mobile-message-bubble.right .zalo-like-button {
+    display: none; 
+}
+
+.zalo-heart-icon.outlined-heart {
+    color: #888; 
+    transition: color 0.1s ease;
+}
+
+.zalo-heart-icon.filled-heart {
+    color: #ff3b30; 
+    transition: color 0.1s ease;
+}
+
+.zalo-like-count{
+    font-size: 11px;
+    margin-left: 3px;
 }
