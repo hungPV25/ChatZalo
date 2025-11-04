@@ -66,7 +66,14 @@ const MobileBubble = ({ msg }) => {
             </div>
           )}
           <div className={`zalo-like-button ${isLiked ? "liked" : ""}`}>
-            <FaHeart size={14} className="zalo-heart-icon filled-heart" />
+            {isLiked === "liked" ? (
+              <FaHeart size={14} className="zalo-heart-icon filled-heart" />
+            ) : (
+              <FaRegHeart
+                size={14}
+                className="zalo-heart-icon outlined-heart"
+              />
+            )}
           </div>
         </div>
       </div>

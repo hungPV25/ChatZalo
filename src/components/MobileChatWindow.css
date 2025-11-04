@@ -73,7 +73,7 @@
 
 .mobile-message-row {
     display: flex;
-    margin-bottom: 8px; 
+    margin-bottom: 20px; 
     align-items: flex-end; 
 }
 
@@ -308,7 +308,7 @@
 
 .zalo-like-button {
     position: absolute;
-    bottom: -15px; 
+    bottom: -14px; 
     right: 3px;   
     display: flex;
     align-items: center;
